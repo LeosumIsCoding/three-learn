@@ -10,16 +10,22 @@ export abstract class MyObject3D<T> {
 
 const box1Object = new Mesh(
     new BoxBufferGeometry(10, 10, 10),
-    new MeshStandardMaterial({color:"rgb(255, 0, 0)"})
+    new MeshStandardMaterial({
+        color:"rgb(255, 0, 0)",
+        metalness: 1,// 金属度
+        roughness:0.2// 粗糙度
+    })
 );
 box1Object.castShadow = true;
 const box1:MyObject3D<Mesh> = {
     myObject: box1Object,
     animation: function (): void {
-        this.myObject.position.y = 10;
-        this.myObject.rotation.x = 0.1;
-        this.myObject.rotation.y += 0.1;
-        this.myObject.rotation.z += 0.1; 
+        this.myObject.position.y = 15;
+        this.myObject.position.x = 20;
+        this.myObject.position.z = 20;
+        // this.myObject.rotation.x = 0.1;
+        // this.myObject.rotation.y += 0.1;
+        // this.myObject.rotation.z += 0.1; 
         console.log("123");
     }
 }
@@ -56,9 +62,13 @@ myObjects.push(sphere);
 
 const stageObject = new Mesh(
     new BoxBufferGeometry(200,10,200),
-    new MeshStandardMaterial({color:"rgb(150, 150, 150)"})
+    new MeshStandardMaterial({
+        color:"rgb(150, 150, 150)",
+        metalness: 0.1
+    })
 )
 stageObject.receiveShadow = true;
+
 const stage:MyObject3D<Mesh> = {
     myObject: stageObject,
     animation:function():void{

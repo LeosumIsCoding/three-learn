@@ -7,7 +7,7 @@ const axesHelper:AxesHelper = new AxesHelper(500);
 helperList.push(axesHelper);
 
 const gridHelper:GridHelper = new GridHelper(500, 20, 'rgb(200, 200, 200)', 'rgb(100, 100, 100)');
-helperList.push(gridHelper);
+// helperList.push(gridHelper);
 
 const pointLightHepler: PointLightHelper = new PointLightHelper(pointLight,pointLight.distance, pointLight.color);
 
