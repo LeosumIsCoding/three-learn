@@ -1,6 +1,8 @@
-import { BoxBufferGeometry, Mesh, MeshStandardMaterial, SphereBufferGeometry } from "three";
-
-export const myObjects:MyObject3D<Mesh>[] = []
+import { BoxBufferGeometry, Group, Mesh, MeshStandardMaterial, Object3D, PlaneBufferGeometry, SphereBufferGeometry } from "three";
+import { MTLLoader } from "three/examples/jsm/loaders/MTLLoader";
+import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
+import {headimgTexture} from "./TTextures"
+export const myObjects:MyObject3D<Object3D>[] = []
 
 export abstract class MyObject3D<T> {
     public abstract myObject:T;
@@ -29,7 +31,7 @@ const box1:MyObject3D<Mesh> = {
         console.log("123");
     }
 }
-myObjects.push(box1);
+// myObjects.push(box1);
 
 
 const box2:MyObject3D<Mesh> = {
@@ -42,7 +44,7 @@ const box2:MyObject3D<Mesh> = {
         this.myObject.position.z += 1;
     }
 }
-myObjects.push(box2);
+// myObjects.push(box2);
 
 
 const sphereObject = new Mesh(
@@ -58,13 +60,14 @@ const sphere:MyObject3D<Mesh> = {
         // this.myObject.position.z += 1;
     }
 }
-myObjects.push(sphere);
+// myObjects.push(sphere);
 
 const stageObject = new Mesh(
     new BoxBufferGeometry(200,10,200),
     new MeshStandardMaterial({
-        color:"rgb(150, 150, 150)",
-        metalness: 0.1
+        color:"rgb(50, 250, 150)",
+        metalness: 0.2,
+        roughness:0.75
     })
 )
 stageObject.receiveShadow = true;
@@ -73,11 +76,27 @@ const stage:MyObject3D<Mesh> = {
     myObject: stageObject,
     animation:function():void{
         this.myObject.position.y = -5;
+        
     }
 }
 
 myObjects.push(stage);
 
 
+const planeObject:Mesh = new Mesh(
+    new PlaneBufferGeometry(80, 80),
+    new MeshStandardMaterial({
+        color:"rgb(200, 200, 200)",
+        map:headimgTexture,
+    })
+)
+const plane:MyObject3D<Mesh> = {
+    myObject:planeObject,
+    animation() {
+        this.myObject.position.z = -20;    
+        this.myObject.position.y = 50;  
+        this.myObject.scale.set(1.5, 1.5, 1.5)
+    },
+}
 
 

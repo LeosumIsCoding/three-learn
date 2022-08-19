@@ -6,7 +6,7 @@
 <script lang="ts">
 import { TEngine } from "./assets/ts/TEngine";
 import{onMounted, defineComponent, ref} from 'vue';
-import { TCanvasTextureEditor } from "./assets/ts/myObjects/TCanvasTextureEditor";
+// import { TCanvasTextureEditor } from "./ts/myObjects/TCanvasTextureEditor";
 
 
 
@@ -33,7 +33,6 @@ export default defineComponent({
   
 }
 })
-
 
 </script>
 
