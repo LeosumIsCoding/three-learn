@@ -1,5 +1,5 @@
 import {WebGLRenderer, Scene, PerspectiveCamera,AmbientLight,
-    AxesHelper,GridHelper} from "three"
+    AxesHelper,GridHelper, Object3D} from "three"
 import Stats from "three/examples/jsm/libs/stats.module"
 import {OrbitControls} from "three/examples/jsm/controls/OrbitControls"
 
@@ -7,9 +7,8 @@ export interface EngineObjects{
     renderer:WebGLRenderer;
     scene:Scene;
     camera:PerspectiveCamera;
-    ambientLight:AmbientLight;
-    axesHelper:AxesHelper;
-    gridHelper:GridHelper;
+    lightList:Object3D[];
+    heplerList:Object3D[];
     statsDom:HTMLElement;
     stats:Stats;
     orbitControls:OrbitControls;

@@ -5,7 +5,9 @@
 
 <script lang="ts">
 import { TEngine } from "./assets/ts/TEngine";
-import{onMounted, defineComponent, ref} from 'vue'
+import{onMounted, defineComponent, ref} from 'vue';
+import { TCanvasTextureEditor } from "./assets/ts/myObjects/TCanvasTextureEditor";
+
 
 
 export default defineComponent({
@@ -15,6 +17,14 @@ export default defineComponent({
   onMounted(()=>{
     const TE = new TEngine(threeTarget.value!);
     // console.log(TE,threeTarget);
+  //   const textCanvas = new TCanvasTextureEditor();
+  //   textCanvas.draw( ctx =>{
+  //     ctx.beginPath();
+  //     ctx.rect(10, 10, 200, 200);
+  //     ctx.strokeStyle = 'blue';
+  //     ctx.stroke();
+  //     ctx.closePath();
+  //   }).preview()
   })
 
   return{
