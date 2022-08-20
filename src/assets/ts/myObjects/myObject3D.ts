@@ -1,12 +1,26 @@
-import { BoxBufferGeometry, Group, Mesh, MeshStandardMaterial, Object3D, PlaneBufferGeometry, SphereBufferGeometry } from "three";
-import { MTLLoader } from "three/examples/jsm/loaders/MTLLoader";
-import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
+import { AnimationAction, AnimationClip, AnimationMixer, BoxBufferGeometry, Clock, LoopOnce, Mesh, MeshStandardMaterial, Object3D, PlaneBufferGeometry, SphereBufferGeometry } from "three";
+
 import {headimgTexture} from "./TTextures"
+
 export const myObjects:MyObject3D<Object3D>[] = []
+
+export class AnimationObjects{
+    public mixer:AnimationMixer;
+    public action:AnimationAction;
+    constructor(mesh:Mesh, animations:AnimationClip, repeations:number){
+        this.mixer = new AnimationMixer(mesh);
+        this.action = this.mixer.clipAction(animations);
+        this.action.setLoop(LoopOnce, repeations);
+        this.action.play();
+    }
+}
 
 export abstract class MyObject3D<T> {
     public abstract myObject:T;
-    public abstract animation():void;
+    public abstract animation(time:number):void;
+    public abstract animationObject?:AnimationObjects;
+
+
 }
 
 

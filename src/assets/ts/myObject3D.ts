@@ -1,16 +1,16 @@
 import { TCanvasTextureEditor } from './myObjects/TCanvasTextureEditor';
 
-import  { AmbientLight, AnimationMixer, AxesHelper, BoxBufferGeometry, BufferGeometry, GridHelper, Mesh, MeshStandardMaterial, Object3D, PerspectiveCamera, Scene, SphereBufferGeometry, Vector3, WebGLRenderer } from 'three';
-import * as THREE from "three"
+import  {AnimationMixer, Clock, Object3D, PerspectiveCamera, Scene, Vector3, WebGLRenderer } from 'three';
+
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import Stats from 'three/examples/jsm/libs/stats.module';
 import {EngineObjects} from "./interfaces/EngineObject";
 import {lightList} from './myObjects/Tlight';
 import {helperList} from './myObjects/THepler'
-import { loadModelList } from './myObjects/TLoadModels';
+import {framePromise, tianyiPromise} from "./myObjects/TLoadModels"
 
-import {myObjects, MyObject3D} from './myObjects/myObject3D'
-import { MMDLoader } from 'three/examples/jsm/loaders/MMDLoader';
+import {MyObject3D, myObjects} from './myObjects/myObject3D'
+
 
 
 export class MyEngineObjects implements EngineObjects{
@@ -26,32 +26,19 @@ export class MyEngineObjects implements EngineObjects{
 
     canvasTextureEditor:TCanvasTextureEditor;
 
-    mixer:AnimationMixer | undefined;
+    clock:Clock;
     renderFun = (): void => {
+        let time = this.clock.getDelta()
         this.objectList.forEach((myObjects)=>{
-            myObjects.animation();
+            myObjects.animation(time); 
         })
         
         this.stats.update();
         this.orbitControls.update();
 
-
-        const clock = new THREE.Clock();
-        const tick = ()=>{
-            const time = clock.getDelta();
-            if(this.mixer){
-                this.mixer.update(time);
-            }else{
-                console.log("err");
-                
-            }
-            console.log("123");
-            this.renderer.render(this.scene, this.camera);
-            requestAnimationFrame(tick);
-        }
-        console.log("123");
-       
-        tick();
+        // console.log("123");
+        this.renderer.render(this.scene, this.camera);
+        requestAnimationFrame(this.renderFun)
     }
     draw2D = ():void =>{
         // const textCanvas = new TCanvasTextureEditor();
@@ -65,7 +52,7 @@ export class MyEngineObjects implements EngineObjects{
     }
 ////////////
 
-    constructor(dom:HTMLElement, myObjects:MyObject3D<Object3D>[]){
+    constructor(dom:HTMLElement){
 
         
         this.objectList = myObjects;
@@ -95,11 +82,23 @@ export class MyEngineObjects implements EngineObjects{
         //     console.log(value); 
         // })
         // console.log(this.objectMap.get("box1").object3D);
+        // debugger
         console.log(this.objectList,"objectList");
         
         this.objectList.forEach((value)=>{
             // console.log(value.myObject,);
             this.scene.add(value.myObject);
+        })
+
+        framePromise.then((frame)=>{
+            this.objectList.push(frame);
+            this.scene.add(frame.myObject);
+            
+        })
+        
+        tianyiPromise.then((tianyi)=>{
+            this.objectList.push(tianyi);
+            this.scene.add(tianyi.myObject);
         })
         
     
@@ -149,47 +148,13 @@ export class MyEngineObjects implements EngineObjects{
         //     // RIGHT:MOUSE.LEFT,
         // }       
 // 渲染
-        // this.renderer.render(this.scene, this.camera);
 
-        const mmdLoader = new MMDLoader();
-        // mmdLoader.load("/shotgun/")\
+        this.clock = new Clock();
+        console.log("clock init!");
+        
+        this.renderer.render(this.scene, this.camera);
 
-        let mixer ;
-        mmdLoader.loadWithAnimation(
-            "/shotgun/雷电将军.pmx",
-            "/danceData/兰若酒醉的蝴蝶mmd数据.vmd",
-            (tianyi)=>{
-                this.scene.add(tianyi.mesh);
-                this.mixer = new AnimationMixer(tianyi.mesh);
-                const action = this.mixer.clipAction(tianyi.animation);
-                action.setLoop(THREE.LoopOnce, 1);
-                action.play();
-                console.log("play");
-                this.draw2D();
-                     
-
-                var audioMesh = new THREE.Mesh(
-                    new BoxBufferGeometry(0, 0, 0.1),
-                    new MeshStandardMaterial()
-                )
-                this.scene.add(audioMesh);
-
-                var listener = new THREE.AudioListener();
-                this.camera.add(listener);
-                // const action = mixer.clipAction(tianyi.animation[0] as any);
-                var PosAudio = new THREE.PositionalAudio(listener);
-                audioMesh.add(PosAudio);
-                var audioLoader = new THREE.AudioLoader();
-                audioLoader.load("/music/原来我就是那一只醉酒的蝴蝶😝【原神】 - 1.醉酒的蝴蝶60fps(Av595077385,P1).mp3",(buffer)=>{
-                    PosAudio.setBuffer(buffer);
-                    PosAudio.setVolume(0.8);
-                    PosAudio.setRefDistance(200);
-                    PosAudio.play();
-                    this.renderFun(); 
-                })
-                 
-            },
-        )
+        this.renderFun();
         
 
     }
