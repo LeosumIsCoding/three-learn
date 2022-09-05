@@ -1,8 +1,9 @@
+import { wall } from './myObject3D';
 import { Object3D, AmbientLight, PointLight, SpotLight } from 'three';
 
 export const lightList:Object3D[] = [];
 
-const ambientLight:AmbientLight = new AmbientLight("rgb(255,255,255)" ,0.45);
+const ambientLight:AmbientLight = new AmbientLight("rgb(255,255,255)" ,0.35);
 // ambientLight.castShadow = true;
 lightList.push(ambientLight);
 
@@ -15,13 +16,17 @@ export const spotLight:SpotLight = new SpotLight(
     'rgb(155,155,155)',
     0.75,
     700,
-    Math.PI*45/180,
+    Math.PI/180 * 45,
     0,
     0
 )
 spotLight.castShadow = true;
-spotLight.position.set(100, 100, 100);
+spotLight.target = wall.myObject;
+spotLight.position.set(10, 100, 100);
+spotLight.rotation.x = Math.PI/180 * -30
+
 lightList.push(spotLight);
+
 
 // export const sunLight:AmbientLight = new AmbientLight("rgb(255,255,255)", 1);
 // sunLight.castShadow = true;

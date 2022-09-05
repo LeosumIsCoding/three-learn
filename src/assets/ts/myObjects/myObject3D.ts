@@ -1,4 +1,4 @@
-import { AnimationAction, AnimationClip, AnimationMixer, BoxBufferGeometry, Clock, LoopOnce, Mesh, MeshStandardMaterial, Object3D, PlaneBufferGeometry, SphereBufferGeometry } from "three";
+import { AnimationAction, AnimationClip, AnimationMixer, BoxBufferGeometry,  LoopOnce, Mesh, MeshStandardMaterial, Object3D, PlaneBufferGeometry, SphereBufferGeometry } from "three";
 
 import {headimgTexture} from "./TTextures"
 
@@ -112,5 +112,26 @@ const plane:MyObject3D<Mesh> = {
         this.myObject.scale.set(1.5, 1.5, 1.5)
     },
 }
+
+const wallObject:Mesh = new Mesh(
+    new BoxBufferGeometry(100, 50),
+    new MeshStandardMaterial({
+        color:"rgb(200, 200, 200)",
+        roughness:0.3,
+        metalness:0.8
+    })
+)
+wallObject.position.z = -80;
+wallObject.position.y = 30;
+wallObject.updateMatrix();
+wallObject.updateMatrixWorld();
+export const wall:MyObject3D<Mesh> = {
+    myObject: wallObject,
+    animation: function (time: number): void {
+
+    }
+}
+
+myObjects.push(wall)
 
 

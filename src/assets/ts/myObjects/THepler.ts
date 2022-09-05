@@ -1,10 +1,10 @@
-import { Object3D, AxesHelper, GridHelper, PointLight, PointLightHelper, SpotLightHelper } from 'three';
+import { Object3D, AxesHelper, GridHelper, PointLightHelper, SpotLightHelper } from 'three';
 import {pointLight, spotLight} from "./Tlight"
 
 export const helperList:Object3D[] = [];
 
 const axesHelper:AxesHelper = new AxesHelper(500);
-// helperList.push(axesHelper);
+helperList.push(axesHelper);
 
 const gridHelper:GridHelper = new GridHelper(500, 20, 'rgb(200, 200, 200)', 'rgb(100, 100, 100)');
 // helperList.push(gridHelper);

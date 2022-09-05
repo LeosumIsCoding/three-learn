@@ -1,6 +1,7 @@
 import { TCanvasTextureEditor } from './myObjects/TCanvasTextureEditor';
 
-import  {AnimationMixer, Clock, Object3D, PerspectiveCamera, Scene, Vector3, WebGLRenderer } from 'three';
+import  { AudioListener, AudioLoader, Clock, Object3D, PerspectiveCamera, Scene, Vector3, WebGLRenderer, Audio, Vector2 } from 'three';
+import {TransformControls} from "three/examples/jsm/controls/TransformControls"
 
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import Stats from 'three/examples/jsm/libs/stats.module';
@@ -21,24 +22,39 @@ export class MyEngineObjects implements EngineObjects{
     heplerList:Object3D[];
     statsDom: HTMLElement;
     stats: Stats;
+    mouse:Vector2;
     orbitControls: OrbitControls;
     objectList: MyObject3D<Object3D>[];
-
     canvasTextureEditor:TCanvasTextureEditor;
+    private transformControls: TransformControls;
 
     clock:Clock;
     renderFun = (): void => {
-        let time = this.clock.getDelta()
-        this.objectList.forEach((myObjects)=>{
-            myObjects.animation(time); 
-        })
-        
-        this.stats.update();
-        this.orbitControls.update();
+        const tick = ():void => {
+            let time = this.clock.getDelta()
+            this.objectList.forEach((myObjects)=>{
+                myObjects.animation(time); 
+            })
+            
+            this.stats.update();
+            this.orbitControls.update();
+    
+            this.renderer.render(this.scene, this.camera);
+            requestAnimationFrame(tick)
+        }    
+            
+        // let listener = new AudioListener();
+        // let audio = new Audio(listener);
+        // var audioLoader = new AudioLoader();
+        // audioLoader.load("/music/原来我就是那一只醉酒的蝴蝶😝【原神】 - 1.醉酒的蝴蝶60fps(Av595077385,P1).mp3", (audioBuffer)=>{
+        //     audio.setBuffer(audioBuffer);
+        //     audio.setLoop(false);
+        //     audio.setVolume(0.5);
+        //     audio.play();
+        // }   )   
+        tick();
 
-        // console.log("123");
-        this.renderer.render(this.scene, this.camera);
-        requestAnimationFrame(this.renderFun)
+        
     }
     draw2D = ():void =>{
         // const textCanvas = new TCanvasTextureEditor();
@@ -53,6 +69,7 @@ export class MyEngineObjects implements EngineObjects{
 ////////////
 
     constructor(dom:HTMLElement){
+
 
         
         this.objectList = myObjects;
@@ -93,7 +110,6 @@ export class MyEngineObjects implements EngineObjects{
         framePromise.then((frame)=>{
             this.objectList.push(frame);
             this.scene.add(frame.myObject);
-            
         })
         
         tianyiPromise.then((tianyi)=>{
@@ -146,17 +162,27 @@ export class MyEngineObjects implements EngineObjects{
         // this.orbitControls.mouseButtons = {
         //     // LEFT:null as unknown as MOUSE,
         //     // RIGHT:MOUSE.LEFT,
-        // }       
+        // }  
+        
+// 初始化变换控制器
+        this.transformControls = new TransformControls(this.camera, this.renderer.domElement);
+        this.scene.add(this.transformControls)
 // 渲染
 
         this.clock = new Clock();
         console.log("clock init!");
         
+
+
         this.renderer.render(this.scene, this.camera);
-
+        this.mouse = new Vector2()
+        this.renderer.domElement.addEventListener("mousemove", (event)=>{
+            let x = event.offsetX/this.renderer.domElement.width*2 - 1;
+            let y = 1- event.offsetY*2/this.renderer.domElement.height;
+            console.log(x, y);
+            this.mouse.set(x, y);
+        })
         this.renderFun();
-        
-
     }
     
 }

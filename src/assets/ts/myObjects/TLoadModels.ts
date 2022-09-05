@@ -1,7 +1,7 @@
 import { MMDLoader } from 'three/examples/jsm/loaders/MMDLoader';
 
-import { Group, Mesh,Clock, AnimationMixer} from "three";
-
+import { Group, Mesh, Audio, AudioLoader} from "three";
+import * as THREE from "three"
 import { MTLLoader } from "three/examples/jsm/loaders/MTLLoader";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 import { AnimationObjects, MyObject3D } from "./myObject3D";
@@ -17,7 +17,7 @@ export const  framePromise = new Promise<Group>(resolve =>{
 
         material.preload();
         objLoader.setMaterials(material);
-        objLoader.load("/models/frame.obj", (obj)=>{
+        objLoader.load("/models/frame.obj", (obj:Group)=>{
             console.log(obj,"2");
             
             resolve(obj)
@@ -28,6 +28,7 @@ export const  framePromise = new Promise<Group>(resolve =>{
         myObject:obj,
         animation() {
             this.myObject.position.y = 50;
+            this.myObject.rotation.y = Math.PI * 40/180;
         },
     }    
     console.log(frame, "3");
@@ -38,17 +39,20 @@ export const  framePromise = new Promise<Group>(resolve =>{
 
 const mmdLoader:MMDLoader = new MMDLoader();
 export const tianyiPromise = new Promise<MyObject3D<Mesh>>(resolve=>{
-    mmdLoader.loadWithAnimation("/tianyi/TDA 洛天依 Hair Recipe 露肩连衣裙 Ver 1.00.pmx", "/danceData/兰若酒醉的蝴蝶mmd数据.vmd",(obj)=>{
+    mmdLoader.loadWithAnimation("/shotgun/雷电将军.pmx", "/danceData/兰若酒醉的蝴蝶mmd数据.vmd",(obj)=>{
         
         const tianyi:MyObject3D<Mesh> = {
             myObject:obj.mesh,
             animationObject: new AnimationObjects(obj.mesh, obj.animation,1),
             animation(time:number) {
                 this.animationObject?.mixer.update(time);
-                console.log(time);
-                
+
+                // this.myObject.position.x += 0.1;
+                // this.myObject.position.y += 0.1;
             },
         }
+
+
         resolve(tianyi);
     })
 })
